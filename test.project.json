@@ -1,0 +1,21 @@
+{
+	"name": "ordered-dict",
+	"tree": {
+		"$className": "DataModel",
+		"ReplicatedStorage": {
+			"$className": "ReplicatedStorage",
+			"DevPackages": {
+				"$path": "DevPackages",
+				"OrderedDict": {
+					"$path": "default.project.json"
+				}
+			}
+		},
+		"ServerScriptService": {
+			"$className": "ServerScriptService",
+			"TestRunner": {
+				"$path": "test/TestRunner.server.luau"
+			}
+		}
+	}
+}

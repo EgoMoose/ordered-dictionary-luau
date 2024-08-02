@@ -1,0 +1,8 @@
+/ServerPackages
+/DevPackages
+/Packages
+/assets
+/build
+
+sourcemap.json
+.ds_store

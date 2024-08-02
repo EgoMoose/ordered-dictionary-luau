@@ -1,0 +1,3 @@
+--!strict
+
+return function() end

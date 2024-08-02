@@ -1,0 +1,6 @@
+{
+	"name": "ordered-dict",
+	"tree": {
+		"$path": "src"
+	}
+}
