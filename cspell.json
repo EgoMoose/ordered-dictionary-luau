@@ -4,8 +4,11 @@
     "dictionaryDefinitions": [],
     "dictionaries": [],
     "words": [
+        "metatable",
+        "newindex",
         "roblox",
-        "rojo"
+        "rojo",
+        "setmetatable"
     ],
     "ignoreWords": [],
     "import": []
