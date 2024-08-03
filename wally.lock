@@ -3,7 +3,7 @@
 registry = "test"
 
 [[package]]
-name = "egomoose/ordered-dict-luau"
+name = "egomoose/ordered-dict"
 version = "0.1.0"
 dependencies = [["TestEZ", "roblox/testez@0.4.1"]]
 

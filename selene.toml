@@ -1,1 +1,1 @@
-std = "selene-requires"
+std = "selene-requires+testez"
