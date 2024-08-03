@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[667],{63891:s=>{s.exports=JSON.parse('{"sourceUrl":"https://github.com/EgoMoose/ordered-dict-luau/blob/main","baseUrl":"/ordered-dict-luau/","classOrder":[],"apiCategories":["Constructors","Methods"]}')}}]);
