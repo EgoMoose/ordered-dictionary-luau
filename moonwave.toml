@@ -10,6 +10,9 @@ apiCategories = [
 enabled = false
 includeReadme = true
 
+[docusaurus]
+baseUrl = "/ordered-dictionary-luau"
+
 [docusaurus.themeConfig.colorMode]
 respectPrefersColorScheme = true
 defaultMode = "dark"
