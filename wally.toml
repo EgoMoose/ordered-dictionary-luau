@@ -1,5 +1,5 @@
 [package]
-name = "egomoose/ordered-dict"
+name = "egomoose/ordered-dictionary"
 description = "https://github.com/EgoMoose/ordered-dict-luau"
 version = "0.1.0"
 registry = "https://github.com/UpliftGames/wally-index"

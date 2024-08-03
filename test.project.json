@@ -1,5 +1,5 @@
 {
-	"name": "ordered-dict",
+	"name": "ordered-dictionary",
 	"tree": {
 		"$className": "DataModel",
 		"ReplicatedStorage": {

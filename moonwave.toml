@@ -1,0 +1,15 @@
+title = "OrderedDictionary"
+gitSourceBranch = "main"
+
+apiCategories = [
+	"Constructors",
+	"Methods"
+]
+
+[home]
+enabled = false
+includeReadme = true
+
+[docusaurus.themeConfig.colorMode]
+respectPrefersColorScheme = true
+defaultMode = "dark"

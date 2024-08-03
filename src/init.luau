@@ -1,5 +1,11 @@
 --!strict
 
+--[=[
+	@class OrderedDictionary
+
+	A dictionary that remembers the order in which keys were first inserted.
+]=]
+
 local OrderedDictionaryConstructors = {}
 
 local OrderedDictionaryClass = {}
@@ -7,6 +13,11 @@ OrderedDictionaryClass.__index = OrderedDictionaryClass
 OrderedDictionaryClass.ClassName = "OrderedDictionary"
 
 -- Types
+
+type Pair<K, V> = {
+	key: K,
+	value: V,
+}
 
 type LinkedNode<K> = {
 	prev: LinkedNode<K>,
@@ -26,6 +37,14 @@ export type OrderedDictionary<K, V> = typeof(setmetatable(
 
 -- Constructors
 
+--[=[
+	@within OrderedDictionary
+	@tag Constructors
+
+	Creates a ordered dictionary.
+
+	@return OrderedDictionary<K, V>
+]=]
 function OrderedDictionaryConstructors.new<K, V>(): OrderedDictionary<K, V>
 	local self = setmetatable({}, OrderedDictionaryClass) :: OrderedDictionary<K, V>
 
@@ -40,6 +59,20 @@ function OrderedDictionaryConstructors.new<K, V>(): OrderedDictionary<K, V>
 	return self
 end
 
+--[=[
+	@within OrderedDictionary
+	@tag Constructors
+
+	Creates a ordered dictionary wrapped within metamethods.
+
+	- `__index` -> :get(key)
+	- `__newindex` -> :set(key, value)
+	- `__len` -> :getLength()
+	- `__iter` -> :iterate()
+	- `__call` -> unwraps: `OrderedDictionary<K, V>`
+
+	@return { [K]: V }
+]=]
 function OrderedDictionaryConstructors.meta<K, V>()
 	local orderedDict = OrderedDictionaryConstructors.new() :: OrderedDictionary<K, V>
 
@@ -128,6 +161,14 @@ end
 
 -- Public Methods
 
+--[=[
+	@within OrderedDictionary
+	@tag Methods
+
+	Creates an iterator function that traverses the key value pairs in the order they were inserted.
+
+	@return () -> (K, V)
+]=]
 function OrderedDictionaryClass.iterate<K, V>(self: OrderedDictionary<K, V>)
 	local current = self.root
 	return function()
@@ -141,6 +182,14 @@ function OrderedDictionaryClass.iterate<K, V>(self: OrderedDictionary<K, V>)
 	end
 end
 
+--[=[
+	@within OrderedDictionary
+	@tag Methods
+
+	Returns all the keys in the ordered dictionary in the order they were inserted.
+
+	@return { K }
+]=]
 function OrderedDictionaryClass.keys<K, V>(self: OrderedDictionary<K, V>)
 	local keys = {}
 	for key, _value in self:iterate() do
@@ -149,6 +198,14 @@ function OrderedDictionaryClass.keys<K, V>(self: OrderedDictionary<K, V>)
 	return keys
 end
 
+--[=[
+	@within OrderedDictionary
+	@tag Methods
+
+	Returns all the values in the ordered dictionary in the order they were inserted.
+
+	@return { V }
+]=]
 function OrderedDictionaryClass.values<K, V>(self: OrderedDictionary<K, V>)
 	local values = {}
 	for _key, value in self:iterate() do
@@ -157,8 +214,16 @@ function OrderedDictionaryClass.values<K, V>(self: OrderedDictionary<K, V>)
 	return values
 end
 
+--[=[
+	@within OrderedDictionary
+	@tag Methods
+
+	Returns all the key-value pairs in the ordered dictionary in the order they were inserted.
+
+	@return {{ key: K, value: V }}
+]=]
 function OrderedDictionaryClass.pairs<K, V>(self: OrderedDictionary<K, V>)
-	local values = {}
+	local values: { Pair<K, V> } = {}
 	for key, value in self:iterate() do
 		table.insert(values, {
 			key = key,
@@ -168,14 +233,40 @@ function OrderedDictionaryClass.pairs<K, V>(self: OrderedDictionary<K, V>)
 	return values
 end
 
+--[=[
+	@within OrderedDictionary
+	@tag Methods
+
+	Returns how many key-value pairs are in the ordered dictionary.
+
+	@return number
+]=]
 function OrderedDictionaryClass.getLength<K, V>(self: OrderedDictionary<K, V>): number
 	return self.length
 end
 
+--[=[
+	@within OrderedDictionary
+	@tag Methods
+
+	Returns the corresponding value that matches the provided key.
+
+	@param key K
+	@return V?
+]=]
 function OrderedDictionaryClass.get<K, V>(self: OrderedDictionary<K, V>, key: K): V?
 	return self.dictionary[key]
 end
 
+--[=[
+	@within OrderedDictionary
+	@tag Methods
+
+	Sets the value at the provided key. If the value is `nil` then the key will be removed.
+
+	@param key K
+	@param value V?
+]=]
 function OrderedDictionaryClass.set<K, V>(self: OrderedDictionary<K, V>, key: K, value: V?)
 	local node = self.map[key]
 
@@ -188,24 +279,78 @@ function OrderedDictionaryClass.set<K, V>(self: OrderedDictionary<K, V>, key: K,
 	end
 end
 
+--[=[
+	@within OrderedDictionary
+	@tag Methods
+
+	Removes and returns the front-most key-value pair in the ordered dictionary.
+
+	@return (K, V)
+]=]
 function OrderedDictionaryClass.popFront<K, V>(self: OrderedDictionary<K, V>)
 	assert(self:getLength() > 0, "OrderedDictionary has no key-value pairs to pop.")
 	return pop(self, self.root.next.key)
 end
 
+--[=[
+	@within OrderedDictionary
+	@tag Methods
+
+	Removes and returns the back-most key-value pair in the ordered dictionary.
+
+	@return (K, V)
+]=]
 function OrderedDictionaryClass.popBack<K, V>(self: OrderedDictionary<K, V>)
 	assert(self:getLength() > 0, "OrderedDictionary has no key-value pairs to pop.")
 	return pop(self, self.root.prev.key)
 end
 
+--[=[
+	@within OrderedDictionary
+	@tag Methods
+
+	Takes the key-value pair indexed by `key` and moves it to the front of the ordered dictionary.
+
+	@param key K
+]=]
 function OrderedDictionaryClass.moveToFront<K, V>(self: OrderedDictionary<K, V>, key: K)
 	return moveTo(self, self.root, key)
 end
 
+--[=[
+	@within OrderedDictionary
+	@tag Methods
+
+	Takes the key-value pair indexed by `key` and moves it to the back of the ordered dictionary.
+
+	@param key K
+]=]
 function OrderedDictionaryClass.moveToBack<K, V>(self: OrderedDictionary<K, V>, key: K)
 	return moveTo(self, self.root.prev, key)
 end
 
+--[=[
+	@within OrderedDictionary
+	@tag Methods
+
+	Returns a copy of the ordered dictionary.
+
+	@return OrderedDictionary<K, V>
+]=]
+function OrderedDictionaryClass.clone<K, V>(self: OrderedDictionary<K, V>)
+	local copy = OrderedDictionaryConstructors.new() :: OrderedDictionary<K, V>
+	for key, value in self:iterate() do
+		copy:set(key, value)
+	end
+	return copy
+end
+
+--[=[
+	@within OrderedDictionary
+	@tag Methods
+
+	Removes all key-value pairs from the ordered dictionary.
+]=]
 function OrderedDictionaryClass.clear<K, V>(self: OrderedDictionary<K, V>)
 	self.root.next = self.root
 	self.root.prev = self.root
@@ -213,6 +358,30 @@ function OrderedDictionaryClass.clear<K, V>(self: OrderedDictionary<K, V>)
 	self.map = {}
 	self.dictionary = {}
 	self.length = 0
+end
+
+--[=[
+	@within OrderedDictionary
+	@tag Methods
+
+	Sorts the ordered dictionary based on the `compare` function. This method mutates the position of key-value pairs in the ordered dictionary.
+
+	```lua
+	orderedDictionary:sort(function(a, b)
+		return a.value > b.value
+	end)
+	```
+
+	@param compare ({ key: K, value: V } , { key: K, value: V }) -> boolean
+]=]
+function OrderedDictionaryClass.sort<K, V>(self: OrderedDictionary<K, V>, compare: (Pair<K, V>, Pair<K, V>) -> boolean)
+	local orderedPairs = self:pairs()
+	table.sort(orderedPairs, compare)
+
+	self:clear()
+	for _, kvPair in orderedPairs do
+		self:set(kvPair.key, kvPair.value)
+	end
 end
 
 --

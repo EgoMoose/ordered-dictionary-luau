@@ -179,6 +179,22 @@ return function()
 			expect(orderedDict.root.prev.key).to.equal("d")
 		end)
 
+		it("should :clone()", function()
+			local orderedDict = OrderedDictionary.new()
+
+			for i, letter in ALPHABET do
+				orderedDict:set(letter, i)
+			end
+
+			local copy = orderedDict:clone()
+
+			expect(orderedDict:getLength()).to.equal(copy:getLength())
+
+			for letter, _i in orderedDict:iterate() do
+				expect(orderedDict:get(letter)).to.equal(copy:get(letter))
+			end
+		end)
+
 		it("should :clear()", function()
 			local orderedDict = OrderedDictionary.new()
 
@@ -188,6 +204,26 @@ return function()
 
 			orderedDict:clear()
 			expect(orderedDict:getLength()).to.equal(0)
+		end)
+
+		it("should :sort()", function()
+			local orderedDict = OrderedDictionary.new()
+
+			for i, letter in ALPHABET do
+				orderedDict:set(letter, i)
+			end
+
+			orderedDict:sort(function(a, b)
+				return string.byte(a.key) > string.byte(b.key)
+			end)
+
+			expect(orderedDict:getLength()).to.equal(#ALPHABET)
+
+			local count = 0
+			for letter, i in orderedDict:iterate() do
+				expect(letter).to.equal(ALPHABET[#ALPHABET - count])
+				count = count + 1
+			end
 		end)
 	end)
 
