@@ -6,7 +6,7 @@
 			"$className": "ReplicatedStorage",
 			"DevPackages": {
 				"$path": "DevPackages",
-				"OrderedDict": {
+				"OrderedDictionary": {
 					"$path": "default.project.json"
 				}
 			}
