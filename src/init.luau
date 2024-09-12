@@ -167,12 +167,14 @@ end
 
 	Creates an iterator function that traverses the key value pairs in the order they were inserted.
 
+	@param reversed boolean?
 	@return () -> (K, V)
 ]=]
-function OrderedDictionaryClass.iterate<K, V>(self: OrderedDictionary<K, V>)
+function OrderedDictionaryClass.iterate<K, V>(self: OrderedDictionary<K, V>, reversed: boolean?)
 	local current = self.root
+	local traversalKey = if reversed then "prev" else "next"
 	return function()
-		current = current.next
+		current = current[traversalKey]
 		if current ~= self.root then
 			local key = current.key
 			local value = self.dictionary[key]
@@ -256,6 +258,40 @@ end
 ]=]
 function OrderedDictionaryClass.get<K, V>(self: OrderedDictionary<K, V>, key: K): V?
 	return self.dictionary[key]
+end
+
+--[=[
+	@within OrderedDictionary
+	@tag Methods
+
+	Gets the key and value by the order of insertion.
+
+	This method stands out for having O(n) complexity so should be used sparingly compared to other indexing methods.
+
+	```lua
+	local firstKey, firstValue = orderedDictionary:index(1)
+	local lastKey, lastValue = orderedDictionary:index(-1)
+	```
+
+	@param index number
+	@return (K, V)
+]=]
+function OrderedDictionaryClass.index<K, V>(self: OrderedDictionary<K, V>, index: number)
+	local indexAbs = math.abs(index)
+	assert(indexAbs > 0, "index must not be zero")
+	assert(indexAbs <= self.length, "index must be less than the OrderedDictionary length.")
+
+	local current = self.root
+	local traversalKey = if math.sign(index) == -1 then "prev" else "next"
+
+	for i = 1, indexAbs do
+		current = current[traversalKey]
+	end
+
+	local key = current.key
+	local value = self.dictionary[key]
+
+	return key, value
 end
 
 --[=[

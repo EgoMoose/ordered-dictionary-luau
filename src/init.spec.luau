@@ -31,6 +31,23 @@ return function()
 			end
 		end)
 
+		it("should :iterate() backwards", function()
+			local orderedDict = OrderedDictionary.new()
+
+			for i, letter in ALPHABET do
+				orderedDict:set(letter, i)
+			end
+
+			expect(orderedDict:getLength()).to.equal(#ALPHABET)
+
+			local count = #ALPHABET + 1
+			for letter, i in orderedDict:iterate(true) do
+				count = count - 1
+				expect(i).to.equal(count)
+				expect(letter).to.equal(ALPHABET[count])
+			end
+		end)
+
 		it("should provide :keys()", function()
 			local orderedDict = OrderedDictionary.new()
 
@@ -100,6 +117,29 @@ return function()
 			local middle = math.ceil(#ALPHABET / 2)
 			local letter = ALPHABET[middle]
 			expect(orderedDict:get(letter)).to.equal(middle)
+		end)
+
+		it("should :index()", function()
+			local orderedDict = OrderedDictionary.new()
+
+			for i, letter in ALPHABET do
+				orderedDict:set(letter, i)
+			end
+
+			local function checkIndex(index: number)
+				local i = if index < 0 then index + 1 else index
+				local j = (i - 1) % #ALPHABET + 1
+
+				local letter = ALPHABET[j]
+				local key, value = orderedDict:index(index)
+				expect(key).to.equal(letter)
+				expect(value).to.equal(j)
+			end
+
+			for i = 1, #ALPHABET do
+				checkIndex(i)
+				checkIndex(-i)
+			end
 		end)
 
 		it("should :set()", function()
