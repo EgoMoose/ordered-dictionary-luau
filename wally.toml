@@ -1,7 +1,8 @@
 [package]
 name = "egomoose/ordered-dictionary"
-description = "https://github.com/EgoMoose/ordered-dictionary-luau"
-version = "0.2.0"
+description = "A dictionary that remembers the order in which keys were first inserted."
+repository = "https://github.com/EgoMoose/ordered-dictionary-luau"
+version = "0.2.1"
 registry = "https://github.com/UpliftGames/wally-index"
 realm = "shared"
 license = "MIT"
