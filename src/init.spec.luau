@@ -119,6 +119,42 @@ return function()
 			expect(orderedDict:get(letter)).to.equal(middle)
 		end)
 
+		it("should :get() only when the value hasn't been removed", function()
+			local orderedDict = OrderedDictionary.new()
+
+			orderedDict:set("A", 1)
+			orderedDict:set("B", 2)
+			orderedDict:set("C", 3)
+
+			expect(orderedDict:get("A")).to.equal(1)
+			expect(orderedDict:get("B")).to.equal(2)
+			expect(orderedDict:get("C")).to.equal(3)
+
+			orderedDict:set("B", nil)
+
+			expect(orderedDict:get("A")).to.equal(1)
+			expect(orderedDict:get("B")).to.equal(nil)
+			expect(orderedDict:get("C")).to.equal(3)
+
+			orderedDict:set("C", nil)
+
+			expect(orderedDict:get("A")).to.equal(1)
+			expect(orderedDict:get("B")).to.equal(nil)
+			expect(orderedDict:get("C")).to.equal(nil)
+
+			orderedDict:set("A", nil)
+
+			expect(orderedDict:get("A")).to.equal(nil)
+			expect(orderedDict:get("B")).to.equal(nil)
+			expect(orderedDict:get("C")).to.equal(nil)
+
+			orderedDict:set("B", 2)
+
+			expect(orderedDict:get("A")).to.equal(nil)
+			expect(orderedDict:get("B")).to.equal(2)
+			expect(orderedDict:get("C")).to.equal(nil)
+		end)
+
 		it("should :index()", function()
 			local orderedDict = OrderedDictionary.new()
 

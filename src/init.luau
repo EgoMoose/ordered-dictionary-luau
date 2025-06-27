@@ -112,6 +112,7 @@ local function remove<K, V>(self: OrderedDictionary<K, V>, key: K)
 	nextNode.prev = prevNode
 
 	self.map[node.key] = nil
+	self.dictionary[node.key] = nil
 	self.length = self.length - 1
 end
 
