@@ -21,12 +21,29 @@ export type OrderedDictionary<K, V> = typeof(setmetatable(
 		map: { [K]: LinkedNode<K> },
 		dictionary: { [K]: V },
 		length: number,
+
+		indicesDirty: boolean,
+		indexByKey: { [K]: number },
+		keyByIndex: { [number]: K },
 	},
 	OrderedDictionaryClass
 ))
 
 function OrderedDictionaryStatic.new<K, V>()
 	local self = setmetatable({}, OrderedDictionaryClass) :: OrderedDictionary<K, V>
+
+	local root = {} :: LinkedNode<K>
+	root.prev = root
+	root.next = root
+
+	self.root = root
+	self.map = {}
+	self.dictionary = {}
+	self.length = 0
+
+	self.indicesDirty = false
+	self.indexByKey = {}
+	self.keyByIndex = {}
 
 	return self
 end
@@ -45,6 +62,7 @@ local function remove<K, V>(self: OrderedDictionary<K, V>, key: K)
 	self.map[node.key] = nil
 	self.dictionary[node.key] = nil
 	self.length = self.length - 1
+	self.indicesDirty = true
 end
 
 local function insert<K, V>(self: OrderedDictionary<K, V>, prevNode: LinkedNode<K>, key: K, value: V)
@@ -65,6 +83,7 @@ local function insert<K, V>(self: OrderedDictionary<K, V>, prevNode: LinkedNode<
 	self.dictionary[key] = value
 
 	self.length = self.length + 1
+	self.indicesDirty = true
 end
 
 local function replace<K, V>(self: OrderedDictionary<K, V>, key: K, value: V)
@@ -72,6 +91,20 @@ local function replace<K, V>(self: OrderedDictionary<K, V>, key: K, value: V)
 	local prevNode = node.prev
 	remove(self, key)
 	insert(self, prevNode, key, value)
+end
+
+local function recomputeIndices<K, V>(self: OrderedDictionary<K, V>)
+	table.clear(self.indexByKey)
+	table.clear(self.keyByIndex)
+
+	local current = self.root
+	for i = 1, self.length do
+		current = current.next
+		self.keyByIndex[i] = current.key
+		self.indexByKey[current.key] = i
+	end
+
+	self.indicesDirty = false
 end
 
 -- Public
@@ -96,22 +129,35 @@ function OrderedDictionaryClass.set<K, V>(self: OrderedDictionary<K, V>, key: K,
 	end
 end
 
-function OrderedDictionaryClass.index<K, V>(self: OrderedDictionary<K, V>, index: number)
+function OrderedDictionaryClass.keyAtIndex<K, V>(self: OrderedDictionary<K, V>, index: number)
 	local indexAbs = math.abs(index)
-	assert(indexAbs > 0, "index must not be zero")
-	assert(indexAbs <= self.length, "index must be less than the OrderedDictionary length.")
+	assert(indexAbs > 0, "Index must not be zero.")
+	assert(indexAbs <= self.length, "Index must be less than the OrderedDictionary length.")
 
-	local current = self.root
-	local traversalKey = if math.sign(index) == -1 then "prev" else "next"
-
-	for _i = 1, indexAbs do
-		current = current[traversalKey]
+	if self.indicesDirty then
+		recomputeIndices(self)
 	end
 
-	local key = current.key
-	local value = self.dictionary[key]
+	if index < 0 then
+		index = index + 1
+	end
 
-	return key, value
+	local indexWrapped = ((index - 1) % self.length) + 1
+	local key = self.keyByIndex[indexWrapped]
+	return key, self.dictionary[key]
+end
+
+function OrderedDictionaryClass.indexAtKey<K, V>(self: OrderedDictionary<K, V>, key: K): number?
+	local node = self.map[key]
+	if not node then
+		return nil
+	end
+
+	if self.indicesDirty then
+		recomputeIndices(self)
+	end
+
+	return self.indexByKey[node.key]
 end
 
 function OrderedDictionaryClass.iterate<K, V>(self: OrderedDictionary<K, V>, reversed: boolean?)
@@ -134,15 +180,25 @@ function OrderedDictionaryClass.swap<K, V>(self: OrderedDictionary<K, V>, keyA: 
 
 	nodeA.key, nodeB.key = keyB, keyA
 	self.map[keyA], self.map[keyB] = nodeB, nodeA
+
+	if not self.indicesDirty then
+		local indexA, indexB = self.indexByKey[keyA], self.indexByKey[keyB]
+		self.indexByKey[keyA], self.indexByKey[keyB] = indexB, indexA
+		self.keyByIndex[indexA], self.keyByIndex[indexB] = keyB, keyA
+	end
 end
 
 function OrderedDictionaryClass.clear<K, V>(self: OrderedDictionary<K, V>)
 	self.root.next = self.root
 	self.root.prev = self.root
 
-	self.map = {}
-	self.dictionary = {}
+	table.clear(self.map)
+	table.clear(self.dictionary)
 	self.length = 0
+
+	table.clear(self.indexByKey)
+	table.clear(self.keyByIndex)
+	self.indicesDirty = true
 end
 
 function OrderedDictionaryClass.keys<K, V>(self: OrderedDictionary<K, V>)
