@@ -255,28 +255,36 @@ end
 	Returns an iterator over the entries in insertion order, suitable for use in
 	a generic `for` loop. Pass `true` to iterate from last to first instead.
 
+	Each step yields the key, the value, and the entry's 1-based position in the
+	order (the same value [OrderedDictionary:indexAtKey] would return for that
+	key, regardless of direction).
+
 	```lua
-	for key, value in dict:iterate() do
-		print(key, value)
+	for key, value, index in dict:iterate() do
+		print(index, key, value)
 	end
 	```
 
 	@within OrderedDictionary
 	@method iterate
 	@param reversed boolean?
-	@return () -> (K?, V?)
+	@return () -> (K?, V?, number?)
 ]=]
 function OrderedDictionaryClass.iterate<K, V>(self: OrderedDictionary<K, V>, reversed: boolean?)
 	local current = self.root
 	local traversalKey = if reversed then "prev" else "next"
+	local index = if reversed then self.length + 1 else 0
+	local step = if reversed then -1 else 1
 	return function()
-		local key, value
+		local key, value, position
 		current = current[traversalKey]
 		if current ~= self.root then
+			index = index + step
 			key = current.key
 			value = self.dictionary[key]
+			position = index
 		end
-		return key, value
+		return key, value, position
 	end
 end
 

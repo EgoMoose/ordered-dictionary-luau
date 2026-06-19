@@ -143,30 +143,41 @@ describe("indexAtKey", function()
 end)
 
 describe("iterate", function()
-	it("iterates in insertion order", function()
+	it("iterates in insertion order, yielding key, value, and index", function()
 		local dict = build("a", "b", "c")
 
 		local seen = {}
-		for key, value in dict:iterate() do
-			table.insert(seen, { key, value })
+		for key, value, index in dict:iterate() do
+			table.insert(seen, { key, value, index })
 		end
 
 		expect(seen).toEqual({
-			{ "a", "a-value" },
-			{ "b", "b-value" },
-			{ "c", "c-value" },
-		})
+			{ "a", "a-value", 1 },
+			{ "b", "b-value", 2 },
+			{ "c", "c-value", 3 },
+		} :: { { any } })
 	end)
 
-	it("iterates in reverse when requested", function()
+	it("iterates in reverse when requested, with positions counting down", function()
 		local dict = build("a", "b", "c")
 
-		local keys = {}
-		for key in dict:iterate(true) do
-			table.insert(keys, key)
+		local seen = {}
+		for key, value, index in dict:iterate(true) do
+			table.insert(seen, { key, value, index })
 		end
 
-		expect(keys).toEqual({ "c", "b", "a" })
+		expect(seen).toEqual({
+			{ "c", "c-value", 3 },
+			{ "b", "b-value", 2 },
+			{ "a", "a-value", 1 },
+		} :: { { any } })
+	end)
+
+	it("yields an index that agrees with indexAtKey", function()
+		local dict = build("a", "b", "c", "d")
+		for key, _value, index in dict:iterate() do
+			expect(index).toBe(dict:indexAtKey(key))
+		end
 	end)
 
 	it("does nothing for an empty dictionary", function()
