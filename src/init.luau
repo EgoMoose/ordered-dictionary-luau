@@ -370,6 +370,23 @@ end
 	@within OrderedDictionary
 	@tag Methods
 
+	Takes the two provided keys and swaps their order in the dictionary.
+
+	@param keyA K
+	@param keyB K
+]=]
+function OrderedDictionaryClass.swap<K, V>(self: OrderedDictionary<K, V>, keyA: K, keyB: K)
+	local nodeA = assert(self.map[keyA], "keyA does not exist in the OrderedDictionary.")
+	local nodeB = assert(self.map[keyB], "keyB does not exist in the OrderedDictionary.")
+
+	nodeA.key, nodeB.key = keyB, keyA
+	self.map[keyA], self.map[keyB] = nodeB, nodeA
+end
+
+--[=[
+	@within OrderedDictionary
+	@tag Methods
+
 	Returns a copy of the ordered dictionary.
 
 	@return OrderedDictionary<K, V>

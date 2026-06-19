@@ -255,6 +255,147 @@ return function()
 			expect(orderedDict.root.prev.key).to.equal("d")
 		end)
 
+		it("should :swap() non-adjacent keys", function()
+			local orderedDict = OrderedDictionary.new()
+
+			for i, letter in ALPHABET do
+				orderedDict:set(letter, i)
+			end
+
+			-- swap the first and last keys
+			local first = ALPHABET[1]
+			local last = ALPHABET[#ALPHABET]
+			orderedDict:swap(first, last)
+
+			expect(orderedDict:getLength()).to.equal(#ALPHABET)
+
+			-- values stay attached to their keys
+			expect(orderedDict:get(first)).to.equal(1)
+			expect(orderedDict:get(last)).to.equal(#ALPHABET)
+
+			-- order is the alphabet with the first/last positions exchanged
+			local expected = table.clone(ALPHABET)
+			expected[1], expected[#expected] = last, first
+
+			local count = 0
+			for letter, _value in orderedDict:iterate() do
+				count = count + 1
+				expect(letter).to.equal(expected[count])
+			end
+			expect(count).to.equal(#ALPHABET)
+		end)
+
+		it("should :swap() adjacent keys", function()
+			local orderedDict = OrderedDictionary.new()
+
+			for i, letter in ALPHABET do
+				orderedDict:set(letter, i)
+			end
+
+			-- swap two neighbouring keys (b and c)
+			orderedDict:swap("b", "c")
+
+			expect(orderedDict:getLength()).to.equal(#ALPHABET)
+			expect(orderedDict:get("b")).to.equal(2)
+			expect(orderedDict:get("c")).to.equal(3)
+
+			local expected = table.clone(ALPHABET)
+			expected[2], expected[3] = "c", "b"
+
+			local count = 0
+			for letter, _value in orderedDict:iterate() do
+				count = count + 1
+				expect(letter).to.equal(expected[count])
+			end
+			expect(count).to.equal(#ALPHABET)
+		end)
+
+		it("should :swap() while preserving reverse order", function()
+			local orderedDict = OrderedDictionary.new()
+
+			for i, letter in ALPHABET do
+				orderedDict:set(letter, i)
+			end
+
+			orderedDict:swap("a", "b")
+
+			local expected = table.clone(ALPHABET)
+			expected[1], expected[2] = "b", "a"
+
+			local count = #ALPHABET + 1
+			for letter, _value in orderedDict:iterate(true) do
+				count = count - 1
+				expect(letter).to.equal(expected[count])
+			end
+			expect(count).to.equal(1)
+		end)
+
+		it("should :swap() the front and back keys", function()
+			local orderedDict = OrderedDictionary.new()
+
+			for i, letter in ALPHABET do
+				orderedDict:set(letter, i)
+			end
+
+			local first = ALPHABET[1]
+			local last = ALPHABET[#ALPHABET]
+			orderedDict:swap(first, last)
+
+			expect(orderedDict.root.next.key).to.equal(last)
+			expect(orderedDict.root.prev.key).to.equal(first)
+		end)
+
+		it("should :swap() the same key as a no-op", function()
+			local orderedDict = OrderedDictionary.new()
+
+			for i, letter in ALPHABET do
+				orderedDict:set(letter, i)
+			end
+
+			orderedDict:swap("d", "d")
+
+			expect(orderedDict:getLength()).to.equal(#ALPHABET)
+			expect(orderedDict:get("d")).to.equal(4)
+
+			local count = 0
+			for letter, i in orderedDict:iterate() do
+				count = count + 1
+				expect(i).to.equal(count)
+				expect(letter).to.equal(ALPHABET[count])
+			end
+			expect(count).to.equal(#ALPHABET)
+		end)
+
+		it("should :swap() and keep :index() consistent", function()
+			local orderedDict = OrderedDictionary.new()
+
+			for i, letter in ALPHABET do
+				orderedDict:set(letter, i)
+			end
+
+			orderedDict:swap("a", "z")
+
+			local firstKey = orderedDict:index(1)
+			local lastKey = orderedDict:index(-1)
+			expect(firstKey).to.equal("z")
+			expect(lastKey).to.equal("a")
+		end)
+
+		it("should :swap() error on a missing key", function()
+			local orderedDict = OrderedDictionary.new()
+
+			orderedDict:set("a", 1)
+			orderedDict:set("b", 2)
+
+			expect(function()
+				orderedDict:swap("a", "missing")
+			end).to.throw()
+
+			expect(function()
+				orderedDict:swap("missing", "b")
+			end).to.throw()
+		end)
+
 		it("should :clone()", function()
 			local orderedDict = OrderedDictionary.new()
 
