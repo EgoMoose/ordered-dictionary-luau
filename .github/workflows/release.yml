@@ -21,7 +21,7 @@ jobs:
         run: lune run wally-install
 
       - name: 🏗️ Build ordered-dictionary.rbxm
-        run: rojo build plugin.project.json -o ordered-dictionary-${{ github.ref_name }}.rbxm
+        run: rojo build default.project.json -o ordered-dictionary-${{ github.ref_name }}.rbxm
 
       - name: 🚀 Create Release
         env:
