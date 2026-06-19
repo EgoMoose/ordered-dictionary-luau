@@ -8,7 +8,6 @@ realm = "shared"
 license = "MIT"
 exclude = ["**"]
 include = ["src", "src/**", "wally.toml", "wally.lock", "default.project.json", "LICENSE"]
-private = true
 
 [dev-dependencies]
 Jest = "jsdotlua/jest@3.10.0"
