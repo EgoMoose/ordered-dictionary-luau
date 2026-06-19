@@ -1,0 +1,21 @@
+{
+	"name": "ordered-dictionary",
+	"tree": {
+		"$className": "DataModel",
+		"ReplicatedStorage": {
+			"$className": "ReplicatedStorage",
+			"Packages": {
+				"$path": "Packages",
+				"OrderedDictionary": {
+					"$path": "default.project.json"
+				}
+			},
+			"DevPackages": {
+				"$path": "DevPackages",
+				"Tests": {
+					"$path": "tests"
+				}
+			}
+		}
+	}
+}
