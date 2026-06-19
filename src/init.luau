@@ -1,9 +1,44 @@
+--[=[
+	@class OrderedDictionary
+
+	A generic dictionary that preserves the order in which keys are inserted.
+
+	Entries are stored in a doubly linked list, so insertion, replacement, and
+	removal are all O(1). Positional lookups (`keyAtIndex`/`indexAtKey`) are
+	served from an index cache that is rebuilt lazily on the first lookup after
+	a structural change, making repeated lookups O(1) until the next mutation.
+
+	```lua
+	local dict = OrderedDictionary.new()
+	dict:set("first", 1)
+	dict:set("second", 2)
+
+	print(dict:indexAtKey("second")) --> 2
+	print(dict:keyAtIndex(1)) --> "first", 1
+	```
+]=]
 local OrderedDictionaryStatic = {}
 
 local OrderedDictionaryClass = {}
 OrderedDictionaryClass.__index = OrderedDictionaryClass
+
+--[=[
+	@within OrderedDictionary
+	@prop ClassName "OrderedDictionary"
+	@tag Field
+
+	A constant identifier for the class.
+]=]
 OrderedDictionaryClass.ClassName = "OrderedDictionary"
 
+--[=[
+	@interface Pair
+	@within OrderedDictionary
+	.key K
+	.value V
+
+	A single key-value entry, as returned by [OrderedDictionary:pairs].
+]=]
 type Pair<K, V> = {
 	key: K,
 	value: V,
@@ -29,6 +64,13 @@ export type OrderedDictionary<K, V> = typeof(setmetatable(
 	OrderedDictionaryClass
 ))
 
+--[=[
+	Creates a new, empty OrderedDictionary.
+
+	@within OrderedDictionary
+	@function new
+	@return OrderedDictionary<K, V>
+]=]
 function OrderedDictionaryStatic.new<K, V>()
 	local self = setmetatable({}, OrderedDictionaryClass) :: OrderedDictionary<K, V>
 
@@ -109,14 +151,41 @@ end
 
 -- Public
 
+--[=[
+	Returns the number of key-value pairs in the dictionary.
+
+	@within OrderedDictionary
+	@method getLength
+	@return number
+]=]
 function OrderedDictionaryClass.getLength<K, V>(self: OrderedDictionary<K, V>)
 	return self.length
 end
 
+--[=[
+	Returns the value associated with `key`, or `nil` if the key is not present.
+
+	@within OrderedDictionary
+	@method get
+	@param key K
+	@return V
+]=]
 function OrderedDictionaryClass.get<K, V>(self: OrderedDictionary<K, V>, key: K): V
 	return self.dictionary[key]
 end
 
+--[=[
+	Sets the value for `key`.
+
+	- If the key is new, it is appended to the end of the order.
+	- If the key already exists, its value is replaced in place, keeping its position.
+	- If `value` is `nil`, the key is removed from the dictionary.
+
+	@within OrderedDictionary
+	@method set
+	@param key K
+	@param value V
+]=]
 function OrderedDictionaryClass.set<K, V>(self: OrderedDictionary<K, V>, key: K, value: V)
 	local node = self.map[key]
 
@@ -129,6 +198,19 @@ function OrderedDictionaryClass.set<K, V>(self: OrderedDictionary<K, V>, key: K,
 	end
 end
 
+--[=[
+	Returns the key and value at the given 1-based position in the order.
+
+	Positive indices count from the front (`1` is the first entry); negative
+	indices count from the back (`-1` is the last entry). Throws if `index` is
+	zero or its magnitude exceeds the length.
+
+	@within OrderedDictionary
+	@method keyAtIndex
+	@param index number
+	@return K
+	@return V
+]=]
 function OrderedDictionaryClass.keyAtIndex<K, V>(self: OrderedDictionary<K, V>, index: number)
 	local indexAbs = math.abs(index)
 	assert(indexAbs > 0, "Index must not be zero.")
@@ -147,6 +229,15 @@ function OrderedDictionaryClass.keyAtIndex<K, V>(self: OrderedDictionary<K, V>, 
 	return key, self.dictionary[key]
 end
 
+--[=[
+	Returns the 1-based position of `key` in the order, or `nil` if the key is
+	not present.
+
+	@within OrderedDictionary
+	@method indexAtKey
+	@param key K
+	@return number?
+]=]
 function OrderedDictionaryClass.indexAtKey<K, V>(self: OrderedDictionary<K, V>, key: K): number?
 	local node = self.map[key]
 	if not node then
@@ -160,6 +251,21 @@ function OrderedDictionaryClass.indexAtKey<K, V>(self: OrderedDictionary<K, V>, 
 	return self.indexByKey[node.key]
 end
 
+--[=[
+	Returns an iterator over the entries in insertion order, suitable for use in
+	a generic `for` loop. Pass `true` to iterate from last to first instead.
+
+	```lua
+	for key, value in dict:iterate() do
+		print(key, value)
+	end
+	```
+
+	@within OrderedDictionary
+	@method iterate
+	@param reversed boolean?
+	@return () -> (K?, V?)
+]=]
 function OrderedDictionaryClass.iterate<K, V>(self: OrderedDictionary<K, V>, reversed: boolean?)
 	local current = self.root
 	local traversalKey = if reversed then "prev" else "next"
@@ -174,6 +280,16 @@ function OrderedDictionaryClass.iterate<K, V>(self: OrderedDictionary<K, V>, rev
 	end
 end
 
+--[=[
+	Swaps the positions of `keyA` and `keyB` in the order. Each key keeps its
+	own value; only their positions are exchanged. Throws if either key is not
+	present.
+
+	@within OrderedDictionary
+	@method swap
+	@param keyA K
+	@param keyB K
+]=]
 function OrderedDictionaryClass.swap<K, V>(self: OrderedDictionary<K, V>, keyA: K, keyB: K)
 	local nodeA = assert(self.map[keyA], "keyA does not exist in the OrderedDictionary.")
 	local nodeB = assert(self.map[keyB], "keyB does not exist in the OrderedDictionary.")
@@ -188,6 +304,12 @@ function OrderedDictionaryClass.swap<K, V>(self: OrderedDictionary<K, V>, keyA: 
 	end
 end
 
+--[=[
+	Removes every entry, resetting the dictionary to empty.
+
+	@within OrderedDictionary
+	@method clear
+]=]
 function OrderedDictionaryClass.clear<K, V>(self: OrderedDictionary<K, V>)
 	self.root.next = self.root
 	self.root.prev = self.root
@@ -201,6 +323,13 @@ function OrderedDictionaryClass.clear<K, V>(self: OrderedDictionary<K, V>)
 	self.indicesDirty = true
 end
 
+--[=[
+	Returns an array of the keys in insertion order.
+
+	@within OrderedDictionary
+	@method keys
+	@return { K }
+]=]
 function OrderedDictionaryClass.keys<K, V>(self: OrderedDictionary<K, V>)
 	local keys = {}
 	for key, _value in self:iterate() do
@@ -209,6 +338,13 @@ function OrderedDictionaryClass.keys<K, V>(self: OrderedDictionary<K, V>)
 	return keys
 end
 
+--[=[
+	Returns an array of the values in insertion order.
+
+	@within OrderedDictionary
+	@method values
+	@return { V }
+]=]
 function OrderedDictionaryClass.values<K, V>(self: OrderedDictionary<K, V>)
 	local values = {}
 	for _key, value in self:iterate() do
@@ -217,6 +353,13 @@ function OrderedDictionaryClass.values<K, V>(self: OrderedDictionary<K, V>)
 	return values
 end
 
+--[=[
+	Returns an array of [Pair] entries in insertion order.
+
+	@within OrderedDictionary
+	@method pairs
+	@return { Pair<K, V> }
+]=]
 function OrderedDictionaryClass.pairs<K, V>(self: OrderedDictionary<K, V>)
 	local values: { Pair<K, V> } = {}
 	for key, value in self:iterate() do
@@ -228,6 +371,21 @@ function OrderedDictionaryClass.pairs<K, V>(self: OrderedDictionary<K, V>)
 	return values
 end
 
+--[=[
+	Reorders the entries in place using `compare`, which receives two [Pair]
+	values and should return `true` when the first should come before the
+	second (the same contract as `table.sort`).
+
+	```lua
+	dict:sort(function(a, b)
+		return a.value < b.value
+	end)
+	```
+
+	@within OrderedDictionary
+	@method sort
+	@param compare (Pair<K, V>, Pair<K, V>) -> boolean
+]=]
 function OrderedDictionaryClass.sort<K, V>(self: OrderedDictionary<K, V>, compare: (Pair<K, V>, Pair<K, V>) -> boolean)
 	local orderedPairs = self:pairs()
 	table.sort(orderedPairs, compare)
