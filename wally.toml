@@ -2,12 +2,14 @@
 name = "egomoose/ordered-dictionary"
 description = "A dictionary that remembers the order in which keys were first inserted."
 repository = "https://github.com/EgoMoose/ordered-dictionary-luau"
-version = "0.3.0"
+version = "1.0.0"
 registry = "https://github.com/UpliftGames/wally-index"
 realm = "shared"
 license = "MIT"
 exclude = ["**"]
 include = ["src", "src/**", "wally.toml", "wally.lock", "default.project.json", "LICENSE"]
+private = true
 
 [dev-dependencies]
-TestEZ = "roblox/testez@0.4.1"
+Jest = "jsdotlua/jest@3.10.0"
+JestGlobals = "jsdotlua/jest-globals@3.10.0"

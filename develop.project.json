@@ -4,17 +4,17 @@
 		"$className": "DataModel",
 		"ReplicatedStorage": {
 			"$className": "ReplicatedStorage",
-			"DevPackages": {
-				"$path": "DevPackages",
+			"Packages": {
+				"$path": "Packages",
 				"OrderedDictionary": {
 					"$path": "default.project.json"
 				}
-			}
-		},
-		"ServerScriptService": {
-			"$className": "ServerScriptService",
-			"TestRunner": {
-				"$path": "test/TestRunner.server.luau"
+			},
+			"DevPackages": {
+				"$path": "DevPackages",
+				"Tests": {
+					"$path": "tests"
+				}
 			}
 		}
 	}

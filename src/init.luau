@@ -1,19 +1,44 @@
---!strict
-
 --[=[
 	@class OrderedDictionary
 
-	A dictionary that remembers the order in which keys were first inserted.
-]=]
+	A generic dictionary that preserves the order in which keys are inserted.
 
-local OrderedDictionaryConstructors = {}
+	Entries are stored in a doubly linked list, so insertion, replacement, and
+	removal are all O(1). Positional lookups (`keyAtIndex`/`indexAtKey`) are
+	served from an index cache that is rebuilt lazily on the first lookup after
+	a structural change, making repeated lookups O(1) until the next mutation.
+
+	```lua
+	local dict = OrderedDictionary.new()
+	dict:set("first", 1)
+	dict:set("second", 2)
+
+	print(dict:indexAtKey("second")) --> 2
+	print(dict:keyAtIndex(1)) --> "first", 1
+	```
+]=]
+local OrderedDictionaryStatic = {}
 
 local OrderedDictionaryClass = {}
 OrderedDictionaryClass.__index = OrderedDictionaryClass
+
+--[=[
+	@within OrderedDictionary
+	@prop ClassName "OrderedDictionary"
+	@tag Field
+
+	A constant identifier for the class.
+]=]
 OrderedDictionaryClass.ClassName = "OrderedDictionary"
 
--- Types
+--[=[
+	@interface Pair
+	@within OrderedDictionary
+	.key K
+	.value V
 
+	A single key-value entry, as returned by [OrderedDictionary:pairs].
+]=]
 type Pair<K, V> = {
 	key: K,
 	value: V,
@@ -31,79 +56,44 @@ export type OrderedDictionary<K, V> = typeof(setmetatable(
 		map: { [K]: LinkedNode<K> },
 		dictionary: { [K]: V },
 		length: number,
+
+		indicesDirty: boolean,
+		indexByKey: { [K]: number },
+		keyByIndex: { [number]: K },
 	},
 	OrderedDictionaryClass
 ))
 
--- Constructors
-
 --[=[
+	Creates a new, empty OrderedDictionary.
+
 	@within OrderedDictionary
-	@tag Constructors
-
-	Creates a ordered dictionary.
-
+	@function new
 	@return OrderedDictionary<K, V>
 ]=]
-function OrderedDictionaryConstructors.new<K, V>(): OrderedDictionary<K, V>
+function OrderedDictionaryStatic.new<K, V>()
 	local self = setmetatable({}, OrderedDictionaryClass) :: OrderedDictionary<K, V>
 
-	self.root = {} :: LinkedNode<K>
-	self.root.next = self.root
-	self.root.prev = self.root
+	local root = {} :: LinkedNode<K>
+	root.prev = root
+	root.next = root
 
+	self.root = root
 	self.map = {}
 	self.dictionary = {}
 	self.length = 0
 
+	self.indicesDirty = false
+	self.indexByKey = {}
+	self.keyByIndex = {}
+
 	return self
 end
 
---[=[
-	@within OrderedDictionary
-	@tag Constructors
-
-	Creates a ordered dictionary wrapped within metamethods.
-
-	- `__index` -> :get(key)
-	- `__newindex` -> :set(key, value)
-	- `__len` -> :getLength()
-	- `__iter` -> :iterate()
-	- `__call` -> unwraps: `OrderedDictionary<K, V>`
-
-	@return { [K]: V }
-]=]
-function OrderedDictionaryConstructors.meta<K, V>()
-	local orderedDict = OrderedDictionaryConstructors.new() :: OrderedDictionary<K, V>
-
-	local meta = {
-		__index = function(_self: any, key: K)
-			return orderedDict:get(key)
-		end,
-		__newindex = function(_self: any, key: K, value: V)
-			orderedDict:set(key, value)
-		end,
-		__len = function(_self: any)
-			return orderedDict:getLength()
-		end,
-		__iter = function(_self: any)
-			return orderedDict:iterate()
-		end,
-		__call = function(_self: any)
-			return orderedDict
-		end,
-		__metatable = false,
-	}
-
-	local result = setmetatable({} :: { [K]: V }, meta)
-	return result
-end
-
--- Private Methods
+-- Private
 
 local function remove<K, V>(self: OrderedDictionary<K, V>, key: K)
-	local node = self.map[key]
-	assert(node, `No key-value pair can be found with the following key: {tostring(key)}`)
+	local node = assert(self.map[key], "No key-value pair can be found with the provided key.")
 
 	local prevNode = node.prev
 	local nextNode = node.next
@@ -114,10 +104,11 @@ local function remove<K, V>(self: OrderedDictionary<K, V>, key: K)
 	self.map[node.key] = nil
 	self.dictionary[node.key] = nil
 	self.length = self.length - 1
+	self.indicesDirty = true
 end
 
 local function insert<K, V>(self: OrderedDictionary<K, V>, prevNode: LinkedNode<K>, key: K, value: V)
-	assert(not self.map[key], `Cannot insert a key that already exists for: {tostring(key)}`)
+	assert(not self.map[key], "Cannot insert a key that already exists.")
 
 	local nextNode = prevNode.next
 
@@ -134,63 +125,217 @@ local function insert<K, V>(self: OrderedDictionary<K, V>, prevNode: LinkedNode<
 	self.dictionary[key] = value
 
 	self.length = self.length + 1
+	self.indicesDirty = true
 end
 
 local function replace<K, V>(self: OrderedDictionary<K, V>, key: K, value: V)
-	local node = self.map[key]
-	assert(node, `No key-value pair can be found with the following key: {tostring(key)}`)
-
+	local node = assert(self.map[key], "No key-value pair can be found with the provided key.")
 	local prevNode = node.prev
 	remove(self, key)
 	insert(self, prevNode, key, value)
 end
 
-local function pop<K, V>(self: OrderedDictionary<K, V>, key: K)
-	local node = self.map[key]
-	assert(node, `No key-value pair can be found with the following key: {tostring(key)}`)
+local function recomputeIndices<K, V>(self: OrderedDictionary<K, V>)
+	table.clear(self.indexByKey)
+	table.clear(self.keyByIndex)
 
-	local value = self:get(key)
-	remove(self, key)
+	local current = self.root
+	for i = 1, self.length do
+		current = current.next
+		self.keyByIndex[i] = current.key
+		self.indexByKey[current.key] = i
+	end
 
-	return key, value :: V
+	self.indicesDirty = false
 end
 
-local function moveTo<K, V>(self: OrderedDictionary<K, V>, prevNode: LinkedNode<K>, key: K)
-	local _, value = pop(self, key)
-	insert(self, prevNode, key, value)
-end
-
--- Public Methods
+-- Public
 
 --[=[
+	Returns the number of key-value pairs in the dictionary.
+
 	@within OrderedDictionary
-	@tag Methods
-
-	Creates an iterator function that traverses the key value pairs in the order they were inserted.
-
-	@param reversed boolean?
-	@return () -> (K, V)
+	@method getLength
+	@return number
 ]=]
-function OrderedDictionaryClass.iterate<K, V>(self: OrderedDictionary<K, V>, reversed: boolean?)
-	local current = self.root
-	local traversalKey = if reversed then "prev" else "next"
-	return function()
-		current = current[traversalKey]
-		if current ~= self.root then
-			local key = current.key
-			local value = self.dictionary[key]
-			return key, value
-		end
-		return nil :: any, nil :: any
+function OrderedDictionaryClass.getLength<K, V>(self: OrderedDictionary<K, V>)
+	return self.length
+end
+
+--[=[
+	Returns the value associated with `key`, or `nil` if the key is not present.
+
+	@within OrderedDictionary
+	@method get
+	@param key K
+	@return V
+]=]
+function OrderedDictionaryClass.get<K, V>(self: OrderedDictionary<K, V>, key: K): V
+	return self.dictionary[key]
+end
+
+--[=[
+	Sets the value for `key`.
+
+	- If the key is new, it is appended to the end of the order.
+	- If the key already exists, its value is replaced in place, keeping its position.
+	- If `value` is `nil`, the key is removed from the dictionary.
+
+	@within OrderedDictionary
+	@method set
+	@param key K
+	@param value V
+]=]
+function OrderedDictionaryClass.set<K, V>(self: OrderedDictionary<K, V>, key: K, value: V)
+	local node = self.map[key]
+
+	if node and not value then
+		remove(self, key)
+	elseif node and value then
+		replace(self, key, value)
+	elseif value then
+		insert(self, self.root.prev, key, value)
 	end
 end
 
 --[=[
+	Returns the key and value at the given 1-based position in the order.
+
+	Positive indices count from the front (`1` is the first entry); negative
+	indices count from the back (`-1` is the last entry). Throws if `index` is
+	zero or its magnitude exceeds the length.
+
 	@within OrderedDictionary
-	@tag Methods
+	@method keyAtIndex
+	@param index number
+	@return K
+	@return V
+]=]
+function OrderedDictionaryClass.keyAtIndex<K, V>(self: OrderedDictionary<K, V>, index: number)
+	local indexAbs = math.abs(index)
+	assert(indexAbs > 0, "Index must not be zero.")
+	assert(indexAbs <= self.length, "Index must be less than the OrderedDictionary length.")
 
-	Returns all the keys in the ordered dictionary in the order they were inserted.
+	if self.indicesDirty then
+		recomputeIndices(self)
+	end
 
+	if index < 0 then
+		index = index + 1
+	end
+
+	local indexWrapped = ((index - 1) % self.length) + 1
+	local key = self.keyByIndex[indexWrapped]
+	return key, self.dictionary[key]
+end
+
+--[=[
+	Returns the 1-based position of `key` in the order, or `nil` if the key is
+	not present.
+
+	@within OrderedDictionary
+	@method indexAtKey
+	@param key K
+	@return number?
+]=]
+function OrderedDictionaryClass.indexAtKey<K, V>(self: OrderedDictionary<K, V>, key: K): number?
+	local node = self.map[key]
+	if not node then
+		return nil
+	end
+
+	if self.indicesDirty then
+		recomputeIndices(self)
+	end
+
+	return self.indexByKey[node.key]
+end
+
+--[=[
+	Returns an iterator over the entries in insertion order, suitable for use in
+	a generic `for` loop. Pass `true` to iterate from last to first instead.
+
+	Each step yields the key, the value, and the entry's 1-based position in the
+	order (the same value [OrderedDictionary:indexAtKey] would return for that
+	key, regardless of direction).
+
+	```lua
+	for key, value, index in dict:iterate() do
+		print(index, key, value)
+	end
+	```
+
+	@within OrderedDictionary
+	@method iterate
+	@param reversed boolean?
+	@return () -> (K?, V?, number?)
+]=]
+function OrderedDictionaryClass.iterate<K, V>(self: OrderedDictionary<K, V>, reversed: boolean?)
+	local current = self.root
+	local traversalKey = if reversed then "prev" else "next"
+	local index = if reversed then self.length + 1 else 0
+	local step = if reversed then -1 else 1
+	return function()
+		local key, value, position
+		current = current[traversalKey]
+		if current ~= self.root then
+			index = index + step
+			key = current.key
+			value = self.dictionary[key]
+			position = index
+		end
+		return key, value, position
+	end
+end
+
+--[=[
+	Swaps the positions of `keyA` and `keyB` in the order. Each key keeps its
+	own value; only their positions are exchanged. Throws if either key is not
+	present.
+
+	@within OrderedDictionary
+	@method swap
+	@param keyA K
+	@param keyB K
+]=]
+function OrderedDictionaryClass.swap<K, V>(self: OrderedDictionary<K, V>, keyA: K, keyB: K)
+	local nodeA = assert(self.map[keyA], "keyA does not exist in the OrderedDictionary.")
+	local nodeB = assert(self.map[keyB], "keyB does not exist in the OrderedDictionary.")
+
+	nodeA.key, nodeB.key = keyB, keyA
+	self.map[keyA], self.map[keyB] = nodeB, nodeA
+
+	if not self.indicesDirty then
+		local indexA, indexB = self.indexByKey[keyA], self.indexByKey[keyB]
+		self.indexByKey[keyA], self.indexByKey[keyB] = indexB, indexA
+		self.keyByIndex[indexA], self.keyByIndex[indexB] = keyB, keyA
+	end
+end
+
+--[=[
+	Removes every entry, resetting the dictionary to empty.
+
+	@within OrderedDictionary
+	@method clear
+]=]
+function OrderedDictionaryClass.clear<K, V>(self: OrderedDictionary<K, V>)
+	self.root.next = self.root
+	self.root.prev = self.root
+
+	table.clear(self.map)
+	table.clear(self.dictionary)
+	self.length = 0
+
+	table.clear(self.indexByKey)
+	table.clear(self.keyByIndex)
+	self.indicesDirty = true
+end
+
+--[=[
+	Returns an array of the keys in insertion order.
+
+	@within OrderedDictionary
+	@method keys
 	@return { K }
 ]=]
 function OrderedDictionaryClass.keys<K, V>(self: OrderedDictionary<K, V>)
@@ -202,11 +347,10 @@ function OrderedDictionaryClass.keys<K, V>(self: OrderedDictionary<K, V>)
 end
 
 --[=[
+	Returns an array of the values in insertion order.
+
 	@within OrderedDictionary
-	@tag Methods
-
-	Returns all the values in the ordered dictionary in the order they were inserted.
-
+	@method values
 	@return { V }
 ]=]
 function OrderedDictionaryClass.values<K, V>(self: OrderedDictionary<K, V>)
@@ -218,12 +362,11 @@ function OrderedDictionaryClass.values<K, V>(self: OrderedDictionary<K, V>)
 end
 
 --[=[
+	Returns an array of [Pair] entries in insertion order.
+
 	@within OrderedDictionary
-	@tag Methods
-
-	Returns all the key-value pairs in the ordered dictionary in the order they were inserted.
-
-	@return {{ key: K, value: V }}
+	@method pairs
+	@return { Pair<K, V> }
 ]=]
 function OrderedDictionaryClass.pairs<K, V>(self: OrderedDictionary<K, V>)
 	local values: { Pair<K, V> } = {}
@@ -237,196 +380,19 @@ function OrderedDictionaryClass.pairs<K, V>(self: OrderedDictionary<K, V>)
 end
 
 --[=[
-	@within OrderedDictionary
-	@tag Methods
-
-	Returns how many key-value pairs are in the ordered dictionary.
-
-	@return number
-]=]
-function OrderedDictionaryClass.getLength<K, V>(self: OrderedDictionary<K, V>): number
-	return self.length
-end
-
---[=[
-	@within OrderedDictionary
-	@tag Methods
-
-	Returns the corresponding value that matches the provided key.
-
-	@param key K
-	@return V?
-]=]
-function OrderedDictionaryClass.get<K, V>(self: OrderedDictionary<K, V>, key: K): V?
-	return self.dictionary[key]
-end
-
---[=[
-	@within OrderedDictionary
-	@tag Methods
-
-	Gets the key and value by the order of insertion.
-
-	This method stands out for having O(n) complexity so should be used sparingly compared to other indexing methods.
+	Reorders the entries in place using `compare`, which receives two [Pair]
+	values and should return `true` when the first should come before the
+	second (the same contract as `table.sort`).
 
 	```lua
-	local firstKey, firstValue = orderedDictionary:index(1)
-	local lastKey, lastValue = orderedDictionary:index(-1)
-	```
-
-	@param index number
-	@return (K, V)
-]=]
-function OrderedDictionaryClass.index<K, V>(self: OrderedDictionary<K, V>, index: number)
-	local indexAbs = math.abs(index)
-	assert(indexAbs > 0, "index must not be zero")
-	assert(indexAbs <= self.length, "index must be less than the OrderedDictionary length.")
-
-	local current = self.root
-	local traversalKey = if math.sign(index) == -1 then "prev" else "next"
-
-	for i = 1, indexAbs do
-		current = current[traversalKey]
-	end
-
-	local key = current.key
-	local value = self.dictionary[key]
-
-	return key, value
-end
-
---[=[
-	@within OrderedDictionary
-	@tag Methods
-
-	Sets the value at the provided key. If the value is `nil` then the key will be removed.
-
-	@param key K
-	@param value V?
-]=]
-function OrderedDictionaryClass.set<K, V>(self: OrderedDictionary<K, V>, key: K, value: V?)
-	local node = self.map[key]
-
-	if node and not value then
-		remove(self, key)
-	elseif node and value then
-		replace(self, key, value)
-	elseif value then
-		insert(self, self.root.prev, key, value)
-	end
-end
-
---[=[
-	@within OrderedDictionary
-	@tag Methods
-
-	Removes and returns the front-most key-value pair in the ordered dictionary.
-
-	@return (K, V)
-]=]
-function OrderedDictionaryClass.popFront<K, V>(self: OrderedDictionary<K, V>)
-	assert(self:getLength() > 0, "OrderedDictionary has no key-value pairs to pop.")
-	return pop(self, self.root.next.key)
-end
-
---[=[
-	@within OrderedDictionary
-	@tag Methods
-
-	Removes and returns the back-most key-value pair in the ordered dictionary.
-
-	@return (K, V)
-]=]
-function OrderedDictionaryClass.popBack<K, V>(self: OrderedDictionary<K, V>)
-	assert(self:getLength() > 0, "OrderedDictionary has no key-value pairs to pop.")
-	return pop(self, self.root.prev.key)
-end
-
---[=[
-	@within OrderedDictionary
-	@tag Methods
-
-	Takes the key-value pair indexed by `key` and moves it to the front of the ordered dictionary.
-
-	@param key K
-]=]
-function OrderedDictionaryClass.moveToFront<K, V>(self: OrderedDictionary<K, V>, key: K)
-	return moveTo(self, self.root, key)
-end
-
---[=[
-	@within OrderedDictionary
-	@tag Methods
-
-	Takes the key-value pair indexed by `key` and moves it to the back of the ordered dictionary.
-
-	@param key K
-]=]
-function OrderedDictionaryClass.moveToBack<K, V>(self: OrderedDictionary<K, V>, key: K)
-	return moveTo(self, self.root.prev, key)
-end
-
---[=[
-	@within OrderedDictionary
-	@tag Methods
-
-	Takes the two provided keys and swaps their order in the dictionary.
-
-	@param keyA K
-	@param keyB K
-]=]
-function OrderedDictionaryClass.swap<K, V>(self: OrderedDictionary<K, V>, keyA: K, keyB: K)
-	local nodeA = assert(self.map[keyA], "keyA does not exist in the OrderedDictionary.")
-	local nodeB = assert(self.map[keyB], "keyB does not exist in the OrderedDictionary.")
-
-	nodeA.key, nodeB.key = keyB, keyA
-	self.map[keyA], self.map[keyB] = nodeB, nodeA
-end
-
---[=[
-	@within OrderedDictionary
-	@tag Methods
-
-	Returns a copy of the ordered dictionary.
-
-	@return OrderedDictionary<K, V>
-]=]
-function OrderedDictionaryClass.clone<K, V>(self: OrderedDictionary<K, V>)
-	local copy = OrderedDictionaryConstructors.new() :: OrderedDictionary<K, V>
-	for key, value in self:iterate() do
-		copy:set(key, value)
-	end
-	return copy
-end
-
---[=[
-	@within OrderedDictionary
-	@tag Methods
-
-	Removes all key-value pairs from the ordered dictionary.
-]=]
-function OrderedDictionaryClass.clear<K, V>(self: OrderedDictionary<K, V>)
-	self.root.next = self.root
-	self.root.prev = self.root
-
-	self.map = {}
-	self.dictionary = {}
-	self.length = 0
-end
-
---[=[
-	@within OrderedDictionary
-	@tag Methods
-
-	Sorts the ordered dictionary based on the `compare` function. This method mutates the position of key-value pairs in the ordered dictionary.
-
-	```lua
-	orderedDictionary:sort(function(a, b)
-		return a.value > b.value
+	dict:sort(function(a, b)
+		return a.value < b.value
 	end)
 	```
 
-	@param compare ({ key: K, value: V } , { key: K, value: V }) -> boolean
+	@within OrderedDictionary
+	@method sort
+	@param compare (Pair<K, V>, Pair<K, V>) -> boolean
 ]=]
 function OrderedDictionaryClass.sort<K, V>(self: OrderedDictionary<K, V>, compare: (Pair<K, V>, Pair<K, V>) -> boolean)
 	local orderedPairs = self:pairs()
@@ -440,4 +406,4 @@ end
 
 --
 
-return OrderedDictionaryConstructors
+return OrderedDictionaryStatic

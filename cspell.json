@@ -4,14 +4,7 @@
     "dictionaryDefinitions": [],
     "dictionaries": [],
     "words": [
-        "metamethods",
-        "metatable",
-        "metatables",
-        "newindex",
-        "roblox",
-        "rojo",
-        "setmetatable",
-        "testez"
+        "setmetatable"
     ],
     "ignoreWords": [],
     "import": []

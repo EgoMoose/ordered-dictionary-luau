@@ -1,8 +1,11 @@
 /ServerPackages
 /DevPackages
 /Packages
-/assets
-/build
+/placefiles
+/.vscode/settings.json
 
+*.env
+*.rbxm
+globalTypes.d.lua
 sourcemap.json
-.ds_store
+*.ds_store
