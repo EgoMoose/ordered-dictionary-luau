@@ -184,9 +184,9 @@ end
 	@within OrderedDictionary
 	@method set
 	@param key K
-	@param value V
+	@param value V?
 ]=]
-function OrderedDictionaryClass.set<K, V>(self: OrderedDictionary<K, V>, key: K, value: V)
+function OrderedDictionaryClass.set<K, V>(self: OrderedDictionary<K, V>, key: K, value: V?)
 	local node = self.map[key]
 
 	if node and not value then
