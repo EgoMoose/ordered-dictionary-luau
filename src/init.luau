@@ -135,6 +135,22 @@ local function replace<K, V>(self: OrderedDictionary<K, V>, key: K, value: V)
 	insert(self, prevNode, key, value)
 end
 
+local function nodeBeforePosition<K, V>(self: OrderedDictionary<K, V>, index: number): LinkedNode<K>
+	local finalLength = self.length + 1
+
+	local indexAbs = math.abs(index)
+	assert(indexAbs > 0, "Index must not be zero.")
+	assert(indexAbs <= finalLength, "Index must be within the OrderedDictionary length.")
+
+	local position = if index < 0 then finalLength + index + 1 else index
+
+	local prevNode = self.root
+	for _ = 1, position - 1 do
+		prevNode = prevNode.next
+	end
+	return prevNode
+end
+
 local function recomputeIndices<K, V>(self: OrderedDictionary<K, V>)
 	table.clear(self.indexByKey)
 	table.clear(self.keyByIndex)
@@ -181,20 +197,35 @@ end
 	- If the key already exists, its value is replaced in place, keeping its position.
 	- If `value` is `nil`, the key is removed from the dictionary.
 
+	When `index` is provided and the call results in an insert (new key) or a
+	replace (existing key), the entry is placed at that 1-based position in the
+	order instead of keeping/appending at the end. Positive indices count from
+	the front; negative indices count from the back, with `-1` being the last
+	position. For a new key the valid range is `1..getLength() + 1` (so
+	`getLength() + 1` appends); for an existing key it is `1..getLength()`.
+	`index` is ignored when `value` is `nil` (a removal). Positioning walks the
+	order to find the target slot, making it O(n).
+
 	@within OrderedDictionary
 	@method set
 	@param key K
 	@param value V?
+	@param index number?
 ]=]
-function OrderedDictionaryClass.set<K, V>(self: OrderedDictionary<K, V>, key: K, value: V?)
+function OrderedDictionaryClass.set<K, V>(self: OrderedDictionary<K, V>, key: K, value: V?, index: number?)
 	local node = self.map[key]
 
 	if node and not value then
 		remove(self, key)
 	elseif node and value then
-		replace(self, key, value)
+		if index then
+			remove(self, key)
+			insert(self, nodeBeforePosition(self, index), key, value)
+		else
+			replace(self, key, value)
+		end
 	elseif value then
-		insert(self, self.root.prev, key, value)
+		insert(self, if index then nodeBeforePosition(self, index) else self.root.prev, key, value)
 	end
 end
 
