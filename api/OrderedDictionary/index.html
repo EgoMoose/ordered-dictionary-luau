@@ -32,8 +32,8 @@ dict:set(&quot;second&quot;, 2)
 print(dict:indexAtKey(&quot;second&quot;)) --&gt; 2
 print(dict:keyAtIndex(1)) --&gt; &quot;first&quot;, 1
 ```"><link data-rh="true" rel="canonical" href="https://EgoMoose.github.io/ordered-dictionary-luau/api/OrderedDictionary"><link data-rh="true" rel="alternate" href="https://EgoMoose.github.io/ordered-dictionary-luau/api/OrderedDictionary" hreflang="en"><link data-rh="true" rel="alternate" href="https://EgoMoose.github.io/ordered-dictionary-luau/api/OrderedDictionary" hreflang="x-default"><link rel="stylesheet" href="/ordered-dictionary-luau/assets/css/styles.b9f2c64d.css">
-<script src="/ordered-dictionary-luau/assets/js/runtime~main.db6d6172.js" defer="defer"></script>
-<script src="/ordered-dictionary-luau/assets/js/main.4cb0ea82.js" defer="defer"></script>
+<script src="/ordered-dictionary-luau/assets/js/runtime~main.4336c56b.js" defer="defer"></script>
+<script src="/ordered-dictionary-luau/assets/js/main.ad5863c3.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
 <script>!function(){function t(t){document.documentElement.setAttribute("data-theme",t)}var e=function(){try{return new URLSearchParams(window.location.search).get("docusaurus-theme")}catch(t){}}()||function(){try{return window.localStorage.getItem("theme")}catch(t){}}();null!==e?t(e):window.matchMedia("(prefers-color-scheme: dark)").matches?t("dark"):(window.matchMedia("(prefers-color-scheme: light)").matches,t("light"))}(),function(){try{const c=new URLSearchParams(window.location.search).entries();for(var[t,e]of c)if(t.startsWith("docusaurus-data-")){var a=t.replace("docusaurus-data-","data-");document.documentElement.setAttribute(a,e)}}catch(t){}}()</script><div id="__docusaurus"><div role="region" aria-label="Skip to main content"><a class="skipToContent_fXgn" href="#__docusaurus_skipToContent_fallback">Skip to main content</a></div><nav aria-label="Main" class="navbar navbar--fixed-top"><div class="navbar__inner"><div class="navbar__items"><button aria-label="Toggle navigation bar" aria-expanded="false" class="navbar__toggle clean-btn" type="button"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path></svg></button><a class="navbar__brand" href="/ordered-dictionary-luau/"><b class="navbar__title text--truncate">ordered-dictionary-luau</b></a><a aria-current="page" class="navbar__item navbar__link navbar__link--active" href="/ordered-dictionary-luau/api/">API</a></div><div class="navbar__items navbar__items--right"><a href="https://github.com/EgoMoose/ordered-dictionary-luau" target="_blank" rel="noopener noreferrer" class="navbar__item navbar__link">GitHub<svg width="13.5" height="13.5" aria-hidden="true" viewBox="0 0 24 24" class="iconExternalLink_nPIU"><path fill="currentColor" d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"></path></svg></a><div class="toggle_vylO colorModeToggle_DEke"><button class="clean-btn toggleButton_gllP toggleButtonDisabled_aARS" type="button" disabled="" title="Switch between dark and light mode (currently light mode)" aria-label="Switch between dark and light mode (currently light mode)" aria-live="polite" aria-pressed="false"><svg viewBox="0 0 24 24" width="24" height="24" class="lightToggleIcon_pyhR"><path fill="currentColor" d="M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5 S14.76,7,12,7L12,7z M2,13l2,0c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S1.45,13,2,13z M20,13l2,0c0.55,0,1-0.45,1-1 s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S19.45,13,20,13z M11,2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V2c0-0.55-0.45-1-1-1S11,1.45,11,2z M11,20v2c0,0.55,0.45,1,1,1s1-0.45,1-1v-2c0-0.55-0.45-1-1-1C11.45,19,11,19.45,11,20z M5.99,4.58c-0.39-0.39-1.03-0.39-1.41,0 c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0s0.39-1.03,0-1.41L5.99,4.58z M18.36,16.95 c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0c0.39-0.39,0.39-1.03,0-1.41 L18.36,16.95z M19.42,5.99c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06c-0.39,0.39-0.39,1.03,0,1.41 s1.03,0.39,1.41,0L19.42,5.99z M7.05,18.36c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06 c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L7.05,18.36z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" class="darkToggleIcon_wfgR"><path fill="currentColor" d="M9.37,5.51C9.19,6.15,9.1,6.82,9.1,7.5c0,4.08,3.32,7.4,7.4,7.4c0.68,0,1.35-0.09,1.99-0.27C17.45,17.19,14.93,19,12,19 c-3.86,0-7-3.14-7-7C5,9.07,6.81,6.55,9.37,5.51z M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36 c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z"></path></svg></button></div><div class="navbarSearchContainer_Bca1"><div class="navbar__search"><span aria-label="expand searchbar" role="button" class="search-icon" tabindex="0"></span><input id="search_input_react" type="search" placeholder="Loading..." aria-label="Search" class="navbar__search-input search-bar" disabled=""></div></div></div></div><div role="presentation" class="navbar-sidebar__backdrop"></div></nav><div id="__docusaurus_skipToContent_fallback" class="main-wrapper mainWrapper_z2l0 docPageContainer_wNNk"><div class="docPage_Dpn1"><div class="docSidebarContainer_o_re"><div class="sidebar_njMd"><nav aria-label="Docs sidebar" class="menu thin-scrollbar menu_SIkG"><ul class="theme-doc-sidebar-menu menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link menu__link--active" aria-current="page" href="/ordered-dictionary-luau/api/OrderedDictionary">​Ordered​Dictionary</a></li></ul></nav></div></div><main class="docMainContainer_HJE1"><div class="container padding-vert--lg"><div class="row"><div class="col docItemCol_MU3C"><div class="docItemContainer_Wv98"><article><div class="member_J0w1 markdown"><div class="tocCollapsible_ETCw theme-doc-toc-mobile tocMobile_oUs_"><button type="button" class="clean-btn tocCollapsibleButton_TO0P">On this page</button></div><header><h1 class="docTitle_mZRt" style="text-decoration:none"><span style="display:inline-block">Ordered</span><span style="display:inline-block">Dictionary</span></h1><div class="luaClassTags_EipM"></div><div>
@@ -57,30 +57,40 @@ dict<span class="token punctuation">:</span><span class="token function">set</sp
 <p>A constant identifier for the class.</p>
 </div><h2 class="anchor anchorWithStickyNavbar_LWe7" id="functions">Functions<a href="#functions" class="hash-link" aria-label="Direct link to Functions" title="Direct link to Functions">​</a></h2><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="new"><code style="text-decoration:none">new</code><a href="#new" class="hash-link" aria-label="Direct link to new" title="Direct link to new">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/EgoMoose/ordered-dictionary-luau/blob/master/src/init.luau#L74"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>OrderedDictionary<!-- -->.</code><code class="green_DgR4">new</code><code>(</code><code>) → </code><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/ordered-dictionary-luau/api/OrderedDictionary">OrderedDictionary</a></code><code class="op_lSLc">&lt;</code><code class="blue_P4bS">K,</code><code class="blue_P4bS">V</code><code class="op_lSLc">&gt;</code></div><div>
 <p>Creates a new, empty OrderedDictionary.</p>
-</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="getLength"><code style="text-decoration:none">getLength</code><a href="#getLength" class="hash-link" aria-label="Direct link to getLength" title="Direct link to getLength">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/EgoMoose/ordered-dictionary-luau/blob/master/src/init.luau#L161"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>OrderedDictionary<!-- -->:</code><code class="green_DgR4">getLength</code><code>(</code><code>) → </code><code class="blue_P4bS">number</code></div><div>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="getLength"><code style="text-decoration:none">getLength</code><a href="#getLength" class="hash-link" aria-label="Direct link to getLength" title="Direct link to getLength">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/EgoMoose/ordered-dictionary-luau/blob/master/src/init.luau#L177"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>OrderedDictionary<!-- -->:</code><code class="green_DgR4">getLength</code><code>(</code><code>) → </code><code class="blue_P4bS">number</code></div><div>
 <p>Returns the number of key-value pairs in the dictionary.</p>
-</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="get"><code style="text-decoration:none">get</code><a href="#get" class="hash-link" aria-label="Direct link to get" title="Direct link to get">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/EgoMoose/ordered-dictionary-luau/blob/master/src/init.luau#L173"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>OrderedDictionary<!-- -->:</code><code class="green_DgR4">get</code><code>(</code><code>key<!-- -->: </code><code class="blue_P4bS">K</code><code>) → </code><code class="blue_P4bS">V</code></div><div>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="get"><code style="text-decoration:none">get</code><a href="#get" class="hash-link" aria-label="Direct link to get" title="Direct link to get">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/EgoMoose/ordered-dictionary-luau/blob/master/src/init.luau#L189"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>OrderedDictionary<!-- -->:</code><code class="green_DgR4">get</code><code>(</code><code>key<!-- -->: </code><code class="blue_P4bS">K</code><code>) → </code><code class="blue_P4bS">V</code></div><div>
 <p>Returns the value associated with <code>key</code>, or <code>nil</code> if the key is not present.</p>
-</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="set"><code style="text-decoration:none">set</code><a href="#set" class="hash-link" aria-label="Direct link to set" title="Direct link to set">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/EgoMoose/ordered-dictionary-luau/blob/master/src/init.luau#L189"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>OrderedDictionary<!-- -->:</code><code class="green_DgR4">set</code><code>(</code><div class="inset_uKQm"><div><code>key<!-- -->: </code><code class="blue_P4bS">K</code><code>,</code></div><div><code>value<!-- -->: </code><code class="blue_P4bS">V?</code></div></div><code>) → </code><code>(</code><code>)</code></div><div>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="set"><code style="text-decoration:none">set</code><a href="#set" class="hash-link" aria-label="Direct link to set" title="Direct link to set">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/EgoMoose/ordered-dictionary-luau/blob/master/src/init.luau#L215"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>OrderedDictionary<!-- -->:</code><code class="green_DgR4">set</code><code>(</code><div class="inset_uKQm"><div><code>key<!-- -->: </code><code class="blue_P4bS">K</code><code>,</code></div><div><code>value<!-- -->: </code><code class="blue_P4bS">V?</code><code>,</code></div><div><code>index<!-- -->: </code><code class="blue_P4bS">number?</code></div></div><code>) → </code><code>(</code><code>)</code></div><div>
 <p>Sets the value for <code>key</code>.</p>
 <ul>
   <li>If the key is new, it is appended to the end of the order.</li>
   <li>If the key already exists, its value is replaced in place, keeping its position.</li>
   <li>If <code>value</code> is <code>nil</code>, the key is removed from the dictionary.</li>
 </ul>
-</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="keyAtIndex"><code style="text-decoration:none">keyAtIndex</code><a href="#keyAtIndex" class="hash-link" aria-label="Direct link to keyAtIndex" title="Direct link to keyAtIndex">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/EgoMoose/ordered-dictionary-luau/blob/master/src/init.luau#L214"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>OrderedDictionary<!-- -->:</code><code class="green_DgR4">keyAtIndex</code><code>(</code><code>index<!-- -->: </code><code class="blue_P4bS">number</code><code>) → </code><code>(</code><div class="inset_uKQm"><div><code class="blue_P4bS">K</code><code>,</code></div><div><code class="blue_P4bS">V</code></div></div><code>)</code></div><div>
+<p>
+  When <code>index</code> is provided and the call results in an insert (new key) or a
+  replace (existing key), the entry is placed at that 1-based position in the
+  order instead of keeping/appending at the end. Positive indices count from
+  the front; negative indices count from the back, with <code>-1</code> being the last
+  position. For a new key the valid range is <code>1..getLength() + 1</code> (so
+  <code>getLength() + 1</code> appends); for an existing key it is <code>1..getLength()</code>.
+  <code>index</code> is ignored when <code>value</code> is <code>nil</code> (a removal). Positioning walks the
+  order to find the target slot, making it O(n).
+</p>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="keyAtIndex"><code style="text-decoration:none">keyAtIndex</code><a href="#keyAtIndex" class="hash-link" aria-label="Direct link to keyAtIndex" title="Direct link to keyAtIndex">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/EgoMoose/ordered-dictionary-luau/blob/master/src/init.luau#L245"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>OrderedDictionary<!-- -->:</code><code class="green_DgR4">keyAtIndex</code><code>(</code><code>index<!-- -->: </code><code class="blue_P4bS">number</code><code>) → </code><code>(</code><div class="inset_uKQm"><div><code class="blue_P4bS">K</code><code>,</code></div><div><code class="blue_P4bS">V</code></div></div><code>)</code></div><div>
 <p>Returns the key and value at the given 1-based position in the order.</p>
 <p>
   Positive indices count from the front (<code>1</code> is the first entry); negative
   indices count from the back (<code>-1</code> is the last entry). Throws if <code>index</code> is
   zero or its magnitude exceeds the length.
 </p>
-</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="indexAtKey"><code style="text-decoration:none">indexAtKey</code><a href="#indexAtKey" class="hash-link" aria-label="Direct link to indexAtKey" title="Direct link to indexAtKey">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/EgoMoose/ordered-dictionary-luau/blob/master/src/init.luau#L241"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>OrderedDictionary<!-- -->:</code><code class="green_DgR4">indexAtKey</code><code>(</code><code>key<!-- -->: </code><code class="blue_P4bS">K</code><code>) → </code><code class="blue_P4bS">number?</code></div><div>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="indexAtKey"><code style="text-decoration:none">indexAtKey</code><a href="#indexAtKey" class="hash-link" aria-label="Direct link to indexAtKey" title="Direct link to indexAtKey">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/EgoMoose/ordered-dictionary-luau/blob/master/src/init.luau#L272"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>OrderedDictionary<!-- -->:</code><code class="green_DgR4">indexAtKey</code><code>(</code><code>key<!-- -->: </code><code class="blue_P4bS">K</code><code>) → </code><code class="blue_P4bS">number?</code></div><div>
 <p>
   Returns the 1-based position of <code>key</code> in the order, or <code>nil</code> if the key is
   not present.
 </p>
-</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="iterate"><code style="text-decoration:none">iterate</code><a href="#iterate" class="hash-link" aria-label="Direct link to iterate" title="Direct link to iterate">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/EgoMoose/ordered-dictionary-luau/blob/master/src/init.luau#L273"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>OrderedDictionary<!-- -->:</code><code class="green_DgR4">iterate</code><code>(</code><code>reversed<!-- -->: </code><code class="blue_P4bS">boolean?</code><code>) → </code><code class="purple_ieR2">(</code><code class="purple_ieR2">)</code><code class="purple_ieR2"> → </code><code class="purple_ieR2">(</code><div class="inset_uKQm"><code class="blue_P4bS">K?</code><code class="purple_ieR2">,</code></div><div class="inset_uKQm"><code class="blue_P4bS">V?</code><code class="purple_ieR2">,</code></div><div class="inset_uKQm"><code class="blue_P4bS">number?</code></div><code class="purple_ieR2">)</code></div><div>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="iterate"><code style="text-decoration:none">iterate</code><a href="#iterate" class="hash-link" aria-label="Direct link to iterate" title="Direct link to iterate">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/EgoMoose/ordered-dictionary-luau/blob/master/src/init.luau#L304"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>OrderedDictionary<!-- -->:</code><code class="green_DgR4">iterate</code><code>(</code><code>reversed<!-- -->: </code><code class="blue_P4bS">boolean?</code><code>) → </code><code class="purple_ieR2">(</code><code class="purple_ieR2">)</code><code class="purple_ieR2"> → </code><code class="purple_ieR2">(</code><div class="inset_uKQm"><code class="blue_P4bS">K?</code><code class="purple_ieR2">,</code></div><div class="inset_uKQm"><code class="blue_P4bS">V?</code><code class="purple_ieR2">,</code></div><div class="inset_uKQm"><code class="blue_P4bS">number?</code></div><code class="purple_ieR2">)</code></div><div>
 <p>
   Returns an iterator over the entries in insertion order, suitable for use in
   a generic <code>for</code> loop. Pass <code>true</code> to iterate from last to first instead.
@@ -94,21 +104,21 @@ dict<span class="token punctuation">:</span><span class="token function">set</sp
 	<span class="token function">print</span><span class="token punctuation">(</span>index<span class="token punctuation">,</span> key<span class="token punctuation">,</span> value<span class="token punctuation">)</span>
 <span class="token keyword">end</span>
 </code></pre>
-</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="swap"><code style="text-decoration:none">swap</code><a href="#swap" class="hash-link" aria-label="Direct link to swap" title="Direct link to swap">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/EgoMoose/ordered-dictionary-luau/blob/master/src/init.luau#L301"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>OrderedDictionary<!-- -->:</code><code class="green_DgR4">swap</code><code>(</code><div class="inset_uKQm"><div><code>keyA<!-- -->: </code><code class="blue_P4bS">K</code><code>,</code></div><div><code>keyB<!-- -->: </code><code class="blue_P4bS">K</code></div></div><code>) → </code><code>(</code><code>)</code></div><div>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="swap"><code style="text-decoration:none">swap</code><a href="#swap" class="hash-link" aria-label="Direct link to swap" title="Direct link to swap">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/EgoMoose/ordered-dictionary-luau/blob/master/src/init.luau#L332"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>OrderedDictionary<!-- -->:</code><code class="green_DgR4">swap</code><code>(</code><div class="inset_uKQm"><div><code>keyA<!-- -->: </code><code class="blue_P4bS">K</code><code>,</code></div><div><code>keyB<!-- -->: </code><code class="blue_P4bS">K</code></div></div><code>) → </code><code>(</code><code>)</code></div><div>
 <p>
   Swaps the positions of <code>keyA</code> and <code>keyB</code> in the order. Each key keeps its
   own value; only their positions are exchanged. Throws if either key is not
   present.
 </p>
-</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="clear"><code style="text-decoration:none">clear</code><a href="#clear" class="hash-link" aria-label="Direct link to clear" title="Direct link to clear">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/EgoMoose/ordered-dictionary-luau/blob/master/src/init.luau#L321"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>OrderedDictionary<!-- -->:</code><code class="green_DgR4">clear</code><code>(</code><code>) → </code><code>(</code><code>)</code></div><div>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="clear"><code style="text-decoration:none">clear</code><a href="#clear" class="hash-link" aria-label="Direct link to clear" title="Direct link to clear">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/EgoMoose/ordered-dictionary-luau/blob/master/src/init.luau#L352"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>OrderedDictionary<!-- -->:</code><code class="green_DgR4">clear</code><code>(</code><code>) → </code><code>(</code><code>)</code></div><div>
 <p>Removes every entry, resetting the dictionary to empty.</p>
-</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="keys"><code style="text-decoration:none">keys</code><a href="#keys" class="hash-link" aria-label="Direct link to keys" title="Direct link to keys">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/EgoMoose/ordered-dictionary-luau/blob/master/src/init.luau#L341"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>OrderedDictionary<!-- -->:</code><code class="green_DgR4">keys</code><code>(</code><code>) → </code><code class="purple_ieR2">{</code><code class="blue_P4bS">K</code><code class="purple_ieR2">}</code></div><div>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="keys"><code style="text-decoration:none">keys</code><a href="#keys" class="hash-link" aria-label="Direct link to keys" title="Direct link to keys">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/EgoMoose/ordered-dictionary-luau/blob/master/src/init.luau#L372"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>OrderedDictionary<!-- -->:</code><code class="green_DgR4">keys</code><code>(</code><code>) → </code><code class="purple_ieR2">{</code><code class="blue_P4bS">K</code><code class="purple_ieR2">}</code></div><div>
 <p>Returns an array of the keys in insertion order.</p>
-</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="values"><code style="text-decoration:none">values</code><a href="#values" class="hash-link" aria-label="Direct link to values" title="Direct link to values">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/EgoMoose/ordered-dictionary-luau/blob/master/src/init.luau#L356"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>OrderedDictionary<!-- -->:</code><code class="green_DgR4">values</code><code>(</code><code>) → </code><code class="purple_ieR2">{</code><code class="blue_P4bS">V</code><code class="purple_ieR2">}</code></div><div>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="values"><code style="text-decoration:none">values</code><a href="#values" class="hash-link" aria-label="Direct link to values" title="Direct link to values">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/EgoMoose/ordered-dictionary-luau/blob/master/src/init.luau#L387"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>OrderedDictionary<!-- -->:</code><code class="green_DgR4">values</code><code>(</code><code>) → </code><code class="purple_ieR2">{</code><code class="blue_P4bS">V</code><code class="purple_ieR2">}</code></div><div>
 <p>Returns an array of the values in insertion order.</p>
-</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="pairs"><code style="text-decoration:none">pairs</code><a href="#pairs" class="hash-link" aria-label="Direct link to pairs" title="Direct link to pairs">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/EgoMoose/ordered-dictionary-luau/blob/master/src/init.luau#L371"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>OrderedDictionary<!-- -->:</code><code class="green_DgR4">pairs</code><code>(</code><code>) → </code><code class="purple_ieR2">{</code><div class="inset_uKQm"><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/ordered-dictionary-luau/api/OrderedDictionary#Pair">Pair</a></code><code class="op_lSLc">&lt;</code><code class="blue_P4bS">K</code><code class="purple_ieR2">,</code></div><div class="inset_uKQm"><code class="blue_P4bS">V</code><code class="op_lSLc">&gt;</code></div><code class="purple_ieR2">}</code></div><div>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="pairs"><code style="text-decoration:none">pairs</code><a href="#pairs" class="hash-link" aria-label="Direct link to pairs" title="Direct link to pairs">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/EgoMoose/ordered-dictionary-luau/blob/master/src/init.luau#L402"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>OrderedDictionary<!-- -->:</code><code class="green_DgR4">pairs</code><code>(</code><code>) → </code><code class="purple_ieR2">{</code><div class="inset_uKQm"><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/ordered-dictionary-luau/api/OrderedDictionary#Pair">Pair</a></code><code class="op_lSLc">&lt;</code><code class="blue_P4bS">K</code><code class="purple_ieR2">,</code></div><div class="inset_uKQm"><code class="blue_P4bS">V</code><code class="op_lSLc">&gt;</code></div><code class="purple_ieR2">}</code></div><div>
 <p>Returns an array of <a href="/ordered-dictionary-luau/api/OrderedDictionary#Pair">Pair</a> entries in insertion order.</p>
-</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="sort"><code style="text-decoration:none">sort</code><a href="#sort" class="hash-link" aria-label="Direct link to sort" title="Direct link to sort">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/EgoMoose/ordered-dictionary-luau/blob/master/src/init.luau#L397"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>OrderedDictionary<!-- -->:</code><code class="green_DgR4">sort</code><code>(</code><code>compare<!-- -->: </code><code class="purple_ieR2">(</code><div class="inset_uKQm"><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/ordered-dictionary-luau/api/OrderedDictionary#Pair">Pair</a></code><code class="op_lSLc">&lt;</code><code class="blue_P4bS">K</code><code class="purple_ieR2">,</code></div><div class="inset_uKQm"><code class="blue_P4bS">V</code><code class="op_lSLc">&gt;</code><code class="purple_ieR2">,</code></div><div class="inset_uKQm"><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/ordered-dictionary-luau/api/OrderedDictionary#Pair">Pair</a></code><code class="op_lSLc">&lt;</code><code class="blue_P4bS">K</code><code class="purple_ieR2">,</code></div><div class="inset_uKQm"><code class="blue_P4bS">V</code><code class="op_lSLc">&gt;</code></div><code class="purple_ieR2">)</code><code class="purple_ieR2"> → </code><code class="blue_P4bS">boolean</code><code>) → </code><code>(</code><code>)</code></div><div>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorWithStickyNavbar_LWe7" id="sort"><code style="text-decoration:none">sort</code><a href="#sort" class="hash-link" aria-label="Direct link to sort" title="Direct link to sort">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/EgoMoose/ordered-dictionary-luau/blob/master/src/init.luau#L428"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>OrderedDictionary<!-- -->:</code><code class="green_DgR4">sort</code><code>(</code><code>compare<!-- -->: </code><code class="purple_ieR2">(</code><div class="inset_uKQm"><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/ordered-dictionary-luau/api/OrderedDictionary#Pair">Pair</a></code><code class="op_lSLc">&lt;</code><code class="blue_P4bS">K</code><code class="purple_ieR2">,</code></div><div class="inset_uKQm"><code class="blue_P4bS">V</code><code class="op_lSLc">&gt;</code><code class="purple_ieR2">,</code></div><div class="inset_uKQm"><code class="blue_P4bS"><a style="text-decoration:underline;color:inherit" href="/ordered-dictionary-luau/api/OrderedDictionary#Pair">Pair</a></code><code class="op_lSLc">&lt;</code><code class="blue_P4bS">K</code><code class="purple_ieR2">,</code></div><div class="inset_uKQm"><code class="blue_P4bS">V</code><code class="op_lSLc">&gt;</code></div><code class="purple_ieR2">)</code><code class="purple_ieR2"> → </code><code class="blue_P4bS">boolean</code><code>) → </code><code>(</code><code>)</code></div><div>
 <p>
   Reorders the entries in place using <code>compare</code>, which receives two <a href="/ordered-dictionary-luau/api/OrderedDictionary#Pair">Pair</a>
   values and should return <code>true</code> when the first should come before the
@@ -148,7 +158,7 @@ dict<span class="token punctuation">:</span><span class="token function">set</sp
             ],
             &quot;function_type&quot;: &quot;method&quot;,
             &quot;source&quot;: {
-                &quot;line&quot;: 161,
+                &quot;line&quot;: 177,
                 &quot;path&quot;: &quot;src/init.luau&quot;
             }
         },
@@ -170,13 +180,13 @@ dict<span class="token punctuation">:</span><span class="token function">set</sp
             ],
             &quot;function_type&quot;: &quot;method&quot;,
             &quot;source&quot;: {
-                &quot;line&quot;: 173,
+                &quot;line&quot;: 189,
                 &quot;path&quot;: &quot;src/init.luau&quot;
             }
         },
         {
             &quot;name&quot;: &quot;set&quot;,
-            &quot;desc&quot;: &quot;Sets the value for `key`.\n\n- If the key is new, it is appended to the end of the order.\n- If the key already exists, its value is replaced in place, keeping its position.\n- If `value` is `nil`, the key is removed from the dictionary.&quot;,
+            &quot;desc&quot;: &quot;Sets the value for `key`.\n\n- If the key is new, it is appended to the end of the order.\n- If the key already exists, its value is replaced in place, keeping its position.\n- If `value` is `nil`, the key is removed from the dictionary.\n\nWhen `index` is provided and the call results in an insert (new key) or a\nreplace (existing key), the entry is placed at that 1-based position in the\norder instead of keeping/appending at the end. Positive indices count from\nthe front; negative indices count from the back, with `-1` being the last\nposition. For a new key the valid range is `1..getLength() + 1` (so\n`getLength() + 1` appends); for an existing key it is `1..getLength()`.\n`index` is ignored when `value` is `nil` (a removal). Positioning walks the\norder to find the target slot, making it O(n).&quot;,
             &quot;params&quot;: [
                 {
                     &quot;name&quot;: &quot;key&quot;,
@@ -187,12 +197,17 @@ dict<span class="token punctuation">:</span><span class="token function">set</sp
                     &quot;name&quot;: &quot;value&quot;,
                     &quot;desc&quot;: &quot;&quot;,
                     &quot;lua_type&quot;: &quot;V?&quot;
+                },
+                {
+                    &quot;name&quot;: &quot;index&quot;,
+                    &quot;desc&quot;: &quot;&quot;,
+                    &quot;lua_type&quot;: &quot;number?&quot;
                 }
             ],
             &quot;returns&quot;: [],
             &quot;function_type&quot;: &quot;method&quot;,
             &quot;source&quot;: {
-                &quot;line&quot;: 189,
+                &quot;line&quot;: 215,
                 &quot;path&quot;: &quot;src/init.luau&quot;
             }
         },
@@ -218,7 +233,7 @@ dict<span class="token punctuation">:</span><span class="token function">set</sp
             ],
             &quot;function_type&quot;: &quot;method&quot;,
             &quot;source&quot;: {
-                &quot;line&quot;: 214,
+                &quot;line&quot;: 245,
                 &quot;path&quot;: &quot;src/init.luau&quot;
             }
         },
@@ -240,7 +255,7 @@ dict<span class="token punctuation">:</span><span class="token function">set</sp
             ],
             &quot;function_type&quot;: &quot;method&quot;,
             &quot;source&quot;: {
-                &quot;line&quot;: 241,
+                &quot;line&quot;: 272,
                 &quot;path&quot;: &quot;src/init.luau&quot;
             }
         },
@@ -262,7 +277,7 @@ dict<span class="token punctuation">:</span><span class="token function">set</sp
             ],
             &quot;function_type&quot;: &quot;method&quot;,
             &quot;source&quot;: {
-                &quot;line&quot;: 273,
+                &quot;line&quot;: 304,
                 &quot;path&quot;: &quot;src/init.luau&quot;
             }
         },
@@ -284,7 +299,7 @@ dict<span class="token punctuation">:</span><span class="token function">set</sp
             &quot;returns&quot;: [],
             &quot;function_type&quot;: &quot;method&quot;,
             &quot;source&quot;: {
-                &quot;line&quot;: 301,
+                &quot;line&quot;: 332,
                 &quot;path&quot;: &quot;src/init.luau&quot;
             }
         },
@@ -295,7 +310,7 @@ dict<span class="token punctuation">:</span><span class="token function">set</sp
             &quot;returns&quot;: [],
             &quot;function_type&quot;: &quot;method&quot;,
             &quot;source&quot;: {
-                &quot;line&quot;: 321,
+                &quot;line&quot;: 352,
                 &quot;path&quot;: &quot;src/init.luau&quot;
             }
         },
@@ -311,7 +326,7 @@ dict<span class="token punctuation">:</span><span class="token function">set</sp
             ],
             &quot;function_type&quot;: &quot;method&quot;,
             &quot;source&quot;: {
-                &quot;line&quot;: 341,
+                &quot;line&quot;: 372,
                 &quot;path&quot;: &quot;src/init.luau&quot;
             }
         },
@@ -327,7 +342,7 @@ dict<span class="token punctuation">:</span><span class="token function">set</sp
             ],
             &quot;function_type&quot;: &quot;method&quot;,
             &quot;source&quot;: {
-                &quot;line&quot;: 356,
+                &quot;line&quot;: 387,
                 &quot;path&quot;: &quot;src/init.luau&quot;
             }
         },
@@ -343,7 +358,7 @@ dict<span class="token punctuation">:</span><span class="token function">set</sp
             ],
             &quot;function_type&quot;: &quot;method&quot;,
             &quot;source&quot;: {
-                &quot;line&quot;: 371,
+                &quot;line&quot;: 402,
                 &quot;path&quot;: &quot;src/init.luau&quot;
             }
         },
@@ -360,7 +375,7 @@ dict<span class="token punctuation">:</span><span class="token function">set</sp
             &quot;returns&quot;: [],
             &quot;function_type&quot;: &quot;method&quot;,
             &quot;source&quot;: {
-                &quot;line&quot;: 397,
+                &quot;line&quot;: 428,
                 &quot;path&quot;: &quot;src/init.luau&quot;
             }
         }
