@@ -2,7 +2,7 @@
 name = "egomoose/ordered-dictionary"
 description = "A dictionary that remembers the order in which keys were first inserted."
 repository = "https://github.com/EgoMoose/ordered-dictionary-luau"
-version = "1.0.0"
+version = "1.0.1"
 registry = "https://github.com/UpliftGames/wally-index"
 realm = "shared"
 license = "MIT"
